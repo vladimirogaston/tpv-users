@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const low = require("lowdb");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-const booksRouter = require("./routes/books");
+const api = require('./routes/api.route')
 
 const PORT = process.env.PORT || 4000;
 
@@ -38,6 +38,6 @@ app.db = db;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-app.use("/books", booksRouter);
+app.use("/api/v0/", api);
 
 app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
