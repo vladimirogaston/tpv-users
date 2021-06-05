@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const { nanoid } = require("nanoid")
+const { db } = require('../persistence/jsondbms/db.config')
 
 const idLength = 8
 
@@ -54,7 +55,7 @@ const idLength = 8
  */
 
 router.get("/", (req, res) => {
-	const books = req.app.db.get("books")
+	const books = db.get("books")
 	res.send(books)
 })
 
@@ -83,7 +84,7 @@ router.get("/", (req, res) => {
  */
 
 router.get("/:id", (req, res) => {
-  const book = req.app.db.get("books").find({ id: req.params.id }).value()
+  const book = db.get("books").find({ id: req.params.id }).value()
   if(!book){
     res.sendStatus(404)
   }
@@ -119,7 +120,7 @@ router.post("/", (req, res) => {
 			id: nanoid(idLength),
 			...req.body,
 		}
-    req.app.db.get("books").push(book).write()
+    db.get("books").push(book).write()
     res.send(book)
 	} catch (error) {
 		return res.status(500).send(error)
@@ -160,13 +161,13 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
 	try {
-		req.app.db
+		db
 			.get("books")
 			.find({ id: req.params.id })
 			.assign(req.body)
 			.write()
 
-		res.send(req.app.db.get("books").find({ id: req.params.id }))
+		res.send(db.get("books").find({ id: req.params.id }))
 	} catch (error) {
 		return res.status(500).send(error)
 	}
@@ -194,7 +195,7 @@ router.put("/:id", (req, res) => {
  */
 
 router.delete("/:id", (req, res) => {
-	req.app.db.get("books").remove({ id: req.params.id }).write()
+	db.get("books").remove({ id: req.params.id }).write()
 	res.sendStatus(200)
 })
 

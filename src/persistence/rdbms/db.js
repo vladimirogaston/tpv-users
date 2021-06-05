@@ -10,7 +10,7 @@ const switchDb = ()=> {
 
 const DATABASE = switchDb()
 const connection = new Sequelize(
-    DATABASE,
+    'users_api',
     'root',
     'root', {
         host: process.env.HOST,
