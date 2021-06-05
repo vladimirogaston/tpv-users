@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
-const user = require('./user.model');
 
 dotenv.config();
 const connection = new Sequelize(
@@ -12,13 +11,8 @@ const connection = new Sequelize(
     }
 );
 
-/*LOS OBJETOS QUE VOY A USAR EN LOS CONTROLADORES PARA ACCEDER A LOS DATOS*/
-const UserModel = user(connection, Sequelize);
-
 connection.sync({force: false}).then(()=>{
     console.log('Tablas sincronizadas');
 });
 
-module.exports = {
-    UserModel
-}
+module.exports = { connection }

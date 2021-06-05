@@ -1,4 +1,7 @@
-module.exports = (sequelize, type)=>{
+const sequelize = require('sequelize')
+const { connection } = require('./db')
+
+const User = (sequelize, type) => {
     return sequelize.define('user',{
         id: {
             type: type.INTEGER,
@@ -38,3 +41,6 @@ module.exports = (sequelize, type)=>{
         }
     });
 }
+
+const UserDAO = User(connection, sequelize)
+module.exports = { UserDAO }
