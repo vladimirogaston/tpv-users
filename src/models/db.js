@@ -4,11 +4,11 @@ const user = require('./user.model');
 
 dotenv.config();
 const connection = new Sequelize(
-    'users_api',
+    process.env.DATABASE,
     'root',
     'root', {
-        host: 'localhost',
-        dialect: 'mariadb'
+        host: process.env.HOST,
+        dialect: process.env.DIALECT
     }
 );
 
