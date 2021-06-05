@@ -1,5 +1,5 @@
 const sequelize = require('sequelize')
-const { connection } = require('./db')
+const { connection } = require('./rdbms/db')
 
 const User = (sequelize, type) => {
     return sequelize.define('user',{

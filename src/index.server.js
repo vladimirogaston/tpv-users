@@ -15,7 +15,7 @@ const dotenv = require('dotenv')
 
 /* JSON.DB SETUP */
 const FileSync = require("lowdb/adapters/FileSync")
-const adapter = new FileSync("db.json")
+const adapter = new FileSync("../db.json")
 const db = low(adapter)
 db.defaults({ books: [] }).write()
 

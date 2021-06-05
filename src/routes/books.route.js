@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const { nanoid } = require("nanoid")
 
-const idLength = 8;
+const idLength = 8
 
 /**
  * @swagger
