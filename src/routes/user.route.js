@@ -64,9 +64,9 @@ const {
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', auth(), awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
+router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
 
-router.get('/id/:id', auth(), awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
+router.get('/id/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
 
 /**
  * @swagger
