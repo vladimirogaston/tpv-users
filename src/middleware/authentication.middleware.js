@@ -2,7 +2,7 @@ const HttpException = require('../middleware/HttpException');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
 
-const auth = (...roles) => {
+const authenticate = (...roles) => {
     return async function (req, res, next) {
         if(!req.headers['token']) throw new HttpException(404, 'Bad formed header exception');
         const token = req.headers['token'];
@@ -12,4 +12,4 @@ const auth = (...roles) => {
     }
 }
 
-module.exports = auth;
+module.exports = { authenticate };

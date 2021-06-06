@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const user = require('./user.model');
 
 dotenv.config();
+console.log('ENV:: ' + process.env.DATABASE)
 const connection = new Sequelize(
     'users_api',
     'root',
