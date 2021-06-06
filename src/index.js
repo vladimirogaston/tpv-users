@@ -35,3 +35,4 @@ app.use(morgan("dev"));
 app.use("/api/v0", apiRouter);
 
 app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+module.exports = { app }

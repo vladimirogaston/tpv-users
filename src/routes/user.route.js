@@ -1,29 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/authentication.middleware');
+const { authenticate } = require('../middleware/authentication.middleware');
 const awaitHandlerFactory = require('../middleware/await.handler.factory');
-const Role = require('../models/user.roles');
 const { createUserSchema, validateLogin } = require('../models/validations/userValidator.middleware');
 const validate = require('../middleware/validate.middleware');
-const { 
-    getAllUsers,
-    getUserById,
-    createUser,
-    userLogin } = require('../controllers/user.controller');
+const { getAllUsers, getUserById, createUser, userLogin } = require('../controllers/user.controller');
 
 /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     jwt:
+ *       type: http
+ *       scheme: bearer
+ *       in: header
+ *       bearerFormat: JWT
+ *
  *   schemas:
  *     Token:
  *       type: object
  *       required:
  *         - token
- *       properties: 
- *         token:
+ *       properties:
+ *         Authorization:
  *           type: string
- *           description: jason web token
- * 
+ *           description: The api-key token
+ *         example:
+ *           authorization: Bearer ...thekoken
+ *
  *     User:
  *       type: object
  *       required:
@@ -64,14 +68,39 @@ const {
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', auth(), awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
+router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
 
-router.get('/id/:id', auth(), awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Returns one user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user's id
+ *     responses:
+ *       200:
+ *         description: Retrieve one user by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               schema:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
 
 /**
  * @swagger
  * /users:
  *   post:
+ *     security:
+ *       - jtw: []
  *     summary: Create a new user
  *     tags: [Users]
  *     requestBody:
@@ -89,8 +118,10 @@ router.get('/id/:id', auth(), awaitHandlerFactory(getUserById)); // localhost:30
  *               $ref: '#/components/schemas/User'
  *       500:
  *         description: Some server error
+ *       403:
+ *         description: Access token is missing or invalid
  */
-router.post('/', createUser, validate, awaitHandlerFactory(createUser)); // localhost:3000/api/v1/users
+router.post('/', authenticate(), createUserSchema, validate, awaitHandlerFactory(createUser)); // localhost:3000/api/v1/users
 
 /**
  * @swagger

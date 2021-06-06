@@ -1,15 +1,15 @@
-const { UserModel } = require('../models/db');
+const { UserDAO } = require('../models/db');
 const HttpException = require('../middleware/HttpException');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const getAllUsers = async (req, res, next) => {
-    let userList = await UserModel.findAll();
+    let userList = await UserDAO.findAll();
     res.send(userList);
 };
 
 const getUserById = async (req, res, next) => {
-    const user = await UserModel.findOne({ id: req.params.id });
+    const user = await UserDAO.findOne({ id: req.params.id });
     if (!user) throw new HttpException(404, 'User not found');
     res.send(user);
 };
@@ -17,13 +17,13 @@ const getUserById = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     console.log(req.body)
     await hashPassword(req);
-    const result = await UserModel.create(req.body);
+    const result = await UserDAO.create(req.body);
     if (!result) throw new HttpException(500, 'Something went wrong');
     res.status(201).send('User was created!');
 };
 
 const userLogin = async (req, res, next) => {
-    const storedUser = await UserModel.findOne({ where: { username: req.body.username }});
+    const storedUser = await UserDAO.findOne({ where: { username: req.body.username }});
     if(!storedUser) {
         throw new HttpException(401, 'User not found exception');
     } else {
