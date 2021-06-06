@@ -1,4 +1,4 @@
-const { UserDAO } = require('../models/db')
+const { UserDAO } = require('../models/user.model')
 const dotenv = require('dotenv')
 const HttpException = require('../middleware/HttpException')
 const bcrypt = require('bcryptjs')

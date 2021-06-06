@@ -1,13 +1,12 @@
 const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
-const user = require('./user.model');
 
 //connection = new Sequelize('sqlite::memory:')
 var connection = new Sequelize('sqlite::memory:')
 
 /**
  * make this function works
- * 
+ *
  * @error
  * @returns null
  */
@@ -31,11 +30,8 @@ const siwtchDb = ()=>{
 }
 
 /*LOS OBJETOS QUE VOY A USAR EN LOS CONTROLADORES PARA ACCEDER A LOS DATOS*/
-const UserDAO = user(connection, Sequelize)
 connection.sync({ force: false }).then(() => {
     console.log('Tablas sincronizadas')
 });
 
-module.exports = {
-    UserDAO
-}
+module.exports = { connection, Sequelize }
