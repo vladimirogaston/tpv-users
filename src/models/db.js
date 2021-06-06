@@ -23,10 +23,10 @@ const switchDb = ()=> {
 }
 /*LOS OBJETOS QUE VOY A USAR EN LOS CONTROLADORES PARA ACCEDER A LOS DATOS*/
 const connection = switchDb()
-const UserDAO = user(connection, Sequelize);
+const UserDAO = user(connection, Sequelize)
 
 connection.sync({force: false}).then(()=>{
-    console.log('Tablas sincronizadas');
+    console.log('Tablas sincronizadas')
 });
 
 module.exports = {
