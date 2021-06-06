@@ -66,7 +66,30 @@ const {
  */
 router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
 
-router.get('/id/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Returns one user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user's id
+ *     responses:
+ *       200:
+ *         description: Retrieve one user by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               schema:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
 
 /**
  * @swagger

@@ -33,12 +33,16 @@ describe('Tasks API', ()=>{
         })
     })
     /* Test DELETE route */
-    describe('DELETE /api/v0/users', ()=>{
-        it('It should delete one user', (done)=>{
+    describe('GET /api/v0/users/:id', ()=>{
+        it('It should retrieve one user', (done)=>{
             chai.request(app)
-            .delete('/api/v0/users/login' + 1)
+            .get('/api/v0/users/' + 1)
             //.set({ "Authorization": `Bearer ${token}` })
-            .set({ "Authorization": `Bearer ${token}` })
+            .set({ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNCIsImlhdCI6MTYyMjk0ODkyNSwiZXhwIjoxNjIzMDM1MzI1fQ.cbGPfY7LZv7sSIiuLLnmE4BIYYpBQNNLG8CZwOZm16U" })
+            .end((err, res)=>{
+                res.should.have.status(200)
+                done()
+            })   
         })
     })
 })
