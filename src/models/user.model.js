@@ -14,27 +14,6 @@ module.exports = (sequelize, type)=>{
             type: type.STRING,
             unique: true,
             allowNull: false
-        },
-        first_name: {
-            type: type.STRING,
-            allowNull: false
-        },
-        last_name: {
-            type: type.STRING,
-            allowNull: false
-        },
-        email: {
-            type: type.STRING,
-            unique: true,
-            allowNull: false
-        },
-        role: {
-            type: type.STRING,
-            allowNull: false
-        },
-        age: {
-            type: type.INTEGER,
-            allowNull: false
         }
     });
 }

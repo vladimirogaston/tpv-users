@@ -3,28 +3,9 @@ const Role = require('../../models/user.roles');
 
 exports.createUserSchema = [
     body('username')
-        .exists()
-        .isLength({ min: 3 }).bail(),
-    body('first_name')
-        .exists().bail()
-        .isAlpha().bail()
-        .isLength({ min: 3 }).bail(),
-    body('last_name')
-        .exists().bail()
-        .isAlpha().bail()
-        .isLength({ min: 3 }).bail(),
-    body('email')
-        .exists().bail()
-        .isEmail().bail(),
-    body('role')
-        .optional().bail()
-        .isIn([Role.ADMIN, Role.OPERATOR, Role.CUSTOMER]).bail(),
+        .exists().bail(),
     body('password')
         .exists().bail()
-        .notEmpty().bail(),
-     body('age')
-        .optional().bail()
-        .isNumeric().bail()
 ];
 
 exports.updateUserSchema = [
