@@ -1,6 +1,4 @@
 1language: node_js
 2node_js: "12"
 3script: 
-4  - "npm run lint"
 5  - "npm test"
-6  - "npm run build"
