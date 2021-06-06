@@ -113,7 +113,7 @@ router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/u
  *       500:
  *         description: Some server error
  */
-router.post('/', createUser, validate, awaitHandlerFactory(createUser)); // localhost:3000/api/v1/users
+router.post('/', createUserSchema, validate, awaitHandlerFactory(createUser)); // localhost:3000/api/v1/users
 
 /**
  * @swagger
