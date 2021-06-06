@@ -1,0 +1,4 @@
+1language: node_js
+2node_js: "12"
+3script: 
+5  - "npm test"
