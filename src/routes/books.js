@@ -1,7 +1,8 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const { nanoid } = require("nanoid");
 
-const idLength = 8
+const idLength = 8;
 
 /**
  * @swagger
@@ -53,8 +54,10 @@ const idLength = 8
  */
 
 router.get("/", (req, res) => {
-	res.status(200)
-})
+	const books = req.app.db.get("books");
+
+	res.send(books);
+});
 
 /**
  * @swagger
@@ -81,8 +84,14 @@ router.get("/", (req, res) => {
  */
 
 router.get("/:id", (req, res) => {
-	res.status(200)
-})
+  const book = req.app.db.get("books").find({ id: req.params.id }).value();
+
+  if(!book){
+    res.sendStatus(404)
+  }
+
+	res.send(book);
+});
 
 /**
  * @swagger
@@ -108,8 +117,19 @@ router.get("/:id", (req, res) => {
  */
 
 router.post("/", (req, res) => {
-	res.status(200)
-})
+	try {
+		const book = {
+			id: nanoid(idLength),
+			...req.body,
+		};
+
+    req.app.db.get("books").push(book).write();
+    
+    res.send(book)
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+});
 
 /**
  * @swagger
@@ -144,8 +164,18 @@ router.post("/", (req, res) => {
  */
 
 router.put("/:id", (req, res) => {
-	res.status(200)
-})
+	try {
+		req.app.db
+			.get("books")
+			.find({ id: req.params.id })
+			.assign(req.body)
+			.write();
+
+		res.send(req.app.db.get("books").find({ id: req.params.id }));
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+});
 
 /**
  * @swagger
@@ -169,7 +199,9 @@ router.put("/:id", (req, res) => {
  */
 
 router.delete("/:id", (req, res) => {
-	res.status(200)
-})
+	req.app.db.get("books").remove({ id: req.params.id }).write();
 
-module.exports = router
+	res.sendStatus(200);
+});
+
+module.exports = router;
