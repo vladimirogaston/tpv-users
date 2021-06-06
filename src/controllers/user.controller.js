@@ -15,6 +15,7 @@ const getUserById = async (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
+    console.log(req.body)
     await hashPassword(req);
     const result = await UserModel.create(req.body);
     if (!result) throw new HttpException(500, 'Something went wrong');
@@ -22,7 +23,7 @@ const createUser = async (req, res, next) => {
 };
 
 const userLogin = async (req, res, next) => {
-    const storedUser = await UserModel.findOne({ where: { email: req.body.email }});
+    const storedUser = await UserModel.findOne({ where: { username: req.body.username }});
     if(!storedUser) {
         throw new HttpException(401, 'User not found exception');
     } else {
