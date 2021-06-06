@@ -30,6 +30,7 @@ const userLogin = async (req, res, next) => {
     } else {
         const isMatch = await bcrypt.compare(req.body.password, storedUser.password)
         if(isMatch) {
+            dotenv.config()
             const secretKey = process.env.SECRET_JWT
             const token = jwt.sign({ user_id: storedUser.id.toString() }, secretKey, { expiresIn: '24h'})
             res.json({ 'token': token })
