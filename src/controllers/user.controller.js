@@ -1,4 +1,5 @@
 const { UserDAO } = require('../models/db')
+const dotenv = require('dotenv')
 const HttpException = require('../middleware/HttpException')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -29,7 +30,8 @@ const userLogin = async (req, res, next) => {
     } else {
         const isMatch = await bcrypt.compare(req.body.password, storedUser.password)
         if(isMatch) {
-            const secretKey = 'supersecret'
+            dotenv.config()
+            const secretKey = process.env.SECRET_JWT
             const token = jwt.sign({ user_id: storedUser.id.toString() }, secretKey, { expiresIn: '24h'})
             res.json({ 'token': token })
         } else {
