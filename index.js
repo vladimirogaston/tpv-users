@@ -3,12 +3,12 @@ const cors = require("cors")
 const morgan = require("morgan")
 const swaggerUI = require("swagger-ui-express")
 const swaggerJsDoc = require("swagger-jsdoc")
-const apiRouter = require('./routes/api.route')
+const apiRouter = require('./src/routes/api.route')
 const dotenv = require('dotenv')
 
 dotenv.config()
 console.log('ENVIRONMENT: ' + process.env.NODE_ENV)
-require('./models/db')
+require('./src/models/db')
 const PORT = process.env.PORT || 4000
 
 const options = {
@@ -25,7 +25,7 @@ const options = {
 			},
 		],
 	},
-	apis: ["./routes/*.js"],
+	apis: ["./src/routes/*.js"],
 };
 
 const specs = swaggerJsDoc(options)
