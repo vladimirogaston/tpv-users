@@ -2,17 +2,13 @@ const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 const user = require('./user.model');
 
-//connection = new Sequelize('sqlite::memory:')
-var connection = new Sequelize('sqlite::memory:')
-
 /**
  * make this function works
  * 
  * @error
  * @returns null
  */
-const siwtchDb = ()=>{
-    dotenv.config();
+ const siwtchDb = ()=>{
     if (process.env.NODE_ENV == 'development') {
         connection = new Sequelize(
             process.env.DB_DATABASE,
@@ -30,11 +26,15 @@ const siwtchDb = ()=>{
     }
 }
 
+dotenv.config()
+var connection = siwtchDb()
+console.log(`INIT PERSISTENCE ON NODE_ENV: ${process.env.NODE_ENV}`)
+
 /*LOS OBJETOS QUE VOY A USAR EN LOS CONTROLADORES PARA ACCEDER A LOS DATOS*/
 const UserDAO = user(connection, Sequelize)
 connection.sync({ force: false }).then(() => {
     console.log('Tablas sincronizadas')
-});
+})
 
 module.exports = {
     UserDAO

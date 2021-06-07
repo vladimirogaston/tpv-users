@@ -1,10 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const { authenticate } = require('../middleware/authentication.middleware');
-const awaitHandlerFactory = require('../middleware/await.handler.factory');
-const { createUserSchema, validateLogin } = require('../models/validations/userValidator.middleware');
-const validate = require('../middleware/validate.middleware');
-const { getAllUsers, getUserById, createUser, userLogin } = require('../controllers/user.controller');
+const express = require('express')
+const router = express.Router()
+
+const authenticate = require('../middleware/authentication.middleware')
+const authorize = require('../middleware/authentication.middleware')
+const awaitHandlerFactory = require('../middleware/await.handler.factory')
+const validate = require('../middleware/validate.middleware')
+const setCustomerRole = require('../middleware/customer.middleware')
+
+const role = require('../models/user.roles')
+const { createUserSchema, createCustomerSchema, validateLogin } = require('../models/validations/userValidator.middleware')
+const { getAllUsers, getUserById, createUser, userLogin } = require('../controllers/user.controller')
 
 /**
  * @swagger
@@ -22,17 +27,34 @@ const { getAllUsers, getUserById, createUser, userLogin } = require('../controll
  *       required:
  *         - token
  *       properties:
- *         Authorization:
+ *         authorization:
  *           type: string
  *           description: The api-key token
  *         example:
  *           authorization: Bearer ...thekoken
  *
+ *     Customer:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username: 
+ *           type: string
+ *           description: The customer's username
+ *         password: 
+ *           type: string
+ *           description: Thec customer's password
+ *       example:
+ *         username: AugustoPinoche
+ *         password: killer   
+ * 
  *     User:
  *       type: object
  *       required:
  *         - username
  *         - password
+ *         - role
  *       properties:
  *         username:
  *           type: string
@@ -40,9 +62,13 @@ const { getAllUsers, getUserById, createUser, userLogin } = require('../controll
  *         password:
  *           type: string
  *           description: The user's password
+ *         role:
+ *           type: string
+ *           description: The user's role
  *       example:
  *         username: perravengativa
  *         password: caradechola
+ *         role: Operator
  */
 
  /**
@@ -68,7 +94,7 @@ const { getAllUsers, getUserById, createUser, userLogin } = require('../controll
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
+router.get('/', awaitHandlerFactory(getAllUsers))
 
 /**
  * @swagger
@@ -93,7 +119,7 @@ router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/user
  *               schema:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
+router.get('/:id', awaitHandlerFactory(getUserById))
 
 /**
  * @swagger
@@ -111,7 +137,7 @@ router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/u
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: The book was successfully created
+ *         description: The User was successfully created
  *         content:
  *           application/json:
  *             schema:
@@ -121,7 +147,33 @@ router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/u
  *       403:
  *         description: Access token is missing or invalid
  */
-router.post('/', authenticate(), createUserSchema, validate, awaitHandlerFactory(createUser)); // localhost:3000/api/v1/users
+router.post('/', authenticate(), authorize(role.ADMIN), createUserSchema, validate, awaitHandlerFactory(createUser))
+
+/**
+ * @swagger
+ * /users/customers:
+ *   post:
+ *     summary: Create a new customer
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Customer'
+ *     responses:
+ *       201:
+ *         description: The customer was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Customer'
+ *       500:
+ *         description: Some server error
+ *       409:
+ *         description: Conflict exception some values are in use by another customer
+ */
+router.post('/customers', createCustomerSchema, validate, setCustomerRole, awaitHandlerFactory(createUser))
 
 /**
  * @swagger
@@ -145,6 +197,6 @@ router.post('/', authenticate(), createUserSchema, validate, awaitHandlerFactory
  *       500:
  *         description: Some server error
  */
-router.post('/login', validateLogin, awaitHandlerFactory(userLogin)); // localhost:3000/api/v1/users/login
+router.post('/login', validateLogin, awaitHandlerFactory(userLogin))
 
-module.exports = router;
+module.exports = router
