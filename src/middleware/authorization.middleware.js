@@ -1,4 +1,3 @@
-const role = require('../models/user.roles')
 const HttpException = require('./HttpException')
 
 const authorize = (role) => {
