@@ -10,7 +10,7 @@ const getAllUsers = async (req, res, next) => {
 }
 
 const getUserById = async (req, res, next) => {
-    const user = await UserDAO.findOne({ id: req.params.id })
+    const user = await UserDAO.findByPk(Number(req.params.id))
     if (!user) throw new HttpException(404, 'User not found')
     res.send(user)
 }

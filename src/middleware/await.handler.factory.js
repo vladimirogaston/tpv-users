@@ -8,4 +8,4 @@ const awaitHandlerFactory = (middleware) => {
     }
 }
 
-module.exports = awaitHandlerFactory;
+module.exports = awaitHandlerFactory
