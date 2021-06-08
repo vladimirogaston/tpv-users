@@ -1,38 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const { authenticate } = require('../middleware/authentication.middleware');
-const awaitHandlerFactory = require('../middleware/await.handler.factory');
-const { createUserSchema, validateLogin } = require('../models/validations/userValidator.middleware');
-const validate = require('../middleware/validate.middleware');
-const { getAllUsers, getUserById, createUser, userLogin } = require('../controllers/user.controller');
+const express = require('express')
+const router = express.Router()
+
+const awaitHandlerFactory = require('../middleware/await.handler.factory')
+const validate = require('../middleware/validate.middleware')
+
+const { createUserSchema } = require('./validations/userValidator.middleware')
+const { getAllUsers, getUserById, createUser, deactivateUser, updateUser } = require('../controllers/user.controller')
+
+const authenticate = require('../middleware/authenticate.middleware')
+const authorize = require('../middleware/authorize.middleware')
+const role = require('../models/user.roles')
 
 /**
  * @swagger
  * components:
- *   securitySchemes:
- *     jwt:
- *       type: http
- *       scheme: bearer
- *       in: header
- *       bearerFormat: JWT
- *
- *   schemas:
- *     Token:
- *       type: object
- *       required:
- *         - token
- *       properties:
- *         Authorization:
- *           type: string
- *           description: The api-key token
- *         example:
- *           authorization: Bearer ...thekoken
- *
+ *   schemas: 
  *     User:
  *       type: object
  *       required:
  *         - username
  *         - password
+ *         - role
  *       properties:
  *         username:
  *           type: string
@@ -40,22 +28,24 @@ const { getAllUsers, getUserById, createUser, userLogin } = require('../controll
  *         password:
  *           type: string
  *           description: The user's password
- *       example:
- *         username: perravengativa
- *         password: caradechola
+ *         role:
+ *           type: string
+ *           description: The user's role
  */
 
- /**
-  * @swagger
-  * tags:
-  *   name: Users
-  *   description: The Users managing API
-  */
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: The Users managing API
+ */
 
 /**
  * @swagger
  * /users:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Returns the list of all the users
  *     tags: [Users]
  *     responses:
@@ -68,12 +58,14 @@ const { getAllUsers, getUserById, createUser, userLogin } = require('../controll
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/users
+router.get('/', authenticate, awaitHandlerFactory(getAllUsers))
 
 /**
  * @swagger
  * /users/{id}:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Returns one user
  *     tags: [Users]
  *     parameters:
@@ -93,14 +85,14 @@ router.get('/', awaitHandlerFactory(getAllUsers)); // localhost:3000/api/v1/user
  *               schema:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/users/id/1
+router.get('/:id', awaitHandlerFactory(getUserById))
 
 /**
  * @swagger
  * /users:
  *   post:
  *     security:
- *       - jtw: []
+ *       - bearerAuth: []
  *     summary: Create a new user
  *     tags: [Users]
  *     requestBody:
@@ -111,7 +103,7 @@ router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/u
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: The book was successfully created
+ *         description: The User was successfully created
  *         content:
  *           application/json:
  *             schema:
@@ -121,13 +113,15 @@ router.get('/:id', awaitHandlerFactory(getUserById)); // localhost:3000/api/v1/u
  *       403:
  *         description: Access token is missing or invalid
  */
-router.post('/', authenticate(), createUserSchema, validate, awaitHandlerFactory(createUser)); // localhost:3000/api/v1/users
+router.post('/', createUserSchema, validate, awaitHandlerFactory(createUser))
 
 /**
  * @swagger
- * /users/login:
- *   post:
- *     summary: Generates a jason web token
+ * /users/{id}:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Updates one user
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -137,14 +131,32 @@ router.post('/', authenticate(), createUserSchema, validate, awaitHandlerFactory
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: The token was successfully generated
+ *         description: The customer was successfully updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Token'
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ *       409:
+ *         description: Conflict exception some values are in use by another user
+ */
+router.put('/:id', createUserSchema, validate, authenticate, authorize(role.ADMIN), awaitHandlerFactory(updateUser))
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Deactivate one User
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: The user was successfully deactivated
  *       500:
  *         description: Some server error
  */
-router.post('/login', validateLogin, awaitHandlerFactory(userLogin)); // localhost:3000/api/v1/users/login
+router.delete('/id', validate, authorize(role.ADMIN), awaitHandlerFactory(deactivateUser))
 
-module.exports = router;
+module.exports = router

@@ -37,12 +37,27 @@ describe('Tasks API', ()=>{
         it('It should retrieve one user', (done)=>{
             chai.request(app)
             .get('/api/v0/users/' + 1)
-            //.set({ "Authorization": `Bearer ${token}` })
-            .set({ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNCIsImlhdCI6MTYyMjk0ODkyNSwiZXhwIjoxNjIzMDM1MzI1fQ.cbGPfY7LZv7sSIiuLLnmE4BIYYpBQNNLG8CZwOZm16U" })
+            //.set({ "authorization": `Bearer ${token}` })
+            .set({ "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNCIsImlhdCI6MTYyMjk0ODkyNSwiZXhwIjoxNjIzMDM1MzI1fQ.cbGPfY7LZv7sSIiuLLnmE4BIYYpBQNNLG8CZwOZm16U" })
             .end((err, res)=>{
                 res.should.have.status(200)
                 done()
             })   
+        })
+    })
+    /* TEST POST */
+    describe('POST /api/v0/users/customers', () => {
+        it('It should create a user with role Customer', () => {
+            chai(app)
+            .post('/api/v0/users/customers')
+            .send({
+                username: 'SubZero',
+                password: 'frozenDeath'
+            })
+            .end((err, res)=>{
+                res.should.have.status(201)
+                done()
+            })
         })
     })
 })

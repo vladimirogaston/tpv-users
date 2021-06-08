@@ -14,6 +14,10 @@ module.exports = (sequelize, type)=>{
             type: type.STRING,
             unique: true,
             allowNull: false
+        },
+        role: {
+            type: type.STRING,
+            allowNull: false
         }
     })
 }
