@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const HttpException = require('../middleware/HttpException')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const awaitHandlerFactory = require('../middleware/await.handler.factory')
 
 const getAllUsers = async (req, res, next) => {
     let userList = await UserDAO.findAll()
@@ -22,6 +23,20 @@ const createUser = async (req, res, next) => {
     res.status(201).send('User was created!')
 }
 
+const updateUser = async (req, res, next) => {
+    const target = await UserDAO.findByPk(Number(req.params.id))
+    if(!target) throw new HttpException(404, 'Not found exception')
+    target.id = req.params.id
+    target = await UserDAO.save(target)
+    if(!target) throw new HttpException(409, 'Conflict exception')
+}
+
+const deactivateUser = async (req, res, next) => {
+    const target = await UserDAO.findByPk(Number(req.params.id))
+    if(target) target.active = false
+    await UserDAO.save(target)
+}
+
 const userLogin = async (req, res, next) => {
     const storedUser = await UserDAO.findOne({ where: { username: req.body.username }})
     if(!storedUser) {
@@ -31,8 +46,8 @@ const userLogin = async (req, res, next) => {
         if(isMatch) {
             dotenv.config()
             const secretKey = process.env.SECRET_JWT
-            const token = jwt.sign({ id: storedUser.id.toString() }, secretKey, { expiresIn: '24h'})
-            res.json({ 'token': token })
+            const token = jwt.sign({ id: storedUser.id.toString(), role: storedUser.role }, secretKey, { expiresIn: '24h'})
+            res.json({ 'id': storedUser.id, token: token })
         } else {
             throw new HttpException(403, 'Forbidden operation exception')
         }
@@ -49,5 +64,7 @@ module.exports = {
     getAllUsers,
     getUserById,
     createUser,
+    updateUser,
+    deactivateUser,
     userLogin
 }

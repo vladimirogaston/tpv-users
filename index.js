@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const morgan = require("morgan")
-
+const swaggerOptions = require('./swagger.options')
 const swaggerUI = require("swagger-ui-express")
 const swaggerJsDoc = require("swagger-jsdoc")
 
@@ -13,59 +13,7 @@ console.log('ENVIRONMENT: ' + process.env.NODE_ENV)
 require('./src/models/db')
 const PORT = process.env.PORT || 4000
 
-/*var swaggerDefinition = { 
-	info: { 
-		title: 'API', version: '1.0.0', description: 'API Documentation', 
-	}, 
-	host: config.swaggerHost, 
-	basePath: '/', 
-	schemes: ['http', 'https'], 
-	securityDefinitions: { 
-		Bearer: { 
-			type: "apiKey", 
-			name: "Authorization", 
-			in: "header", 
-			description: "Token from LOGIN API in Bearer TOKEN format" 
-		} 
-	}, 
-}*/
-
-const options = {
-	definition: {
-		openapi: "3.0.0",
-		info: {
-			title: "Library API",
-			version: "1.0.0",
-			description: "A simple Express Library API",
-		},
-		schemes: ['http', 'https'], 
-		securityDefinitions: { 
-			Bearer: { 
-				type: "apiKey", 
-				name: "Authorization", 
-				in: "header", 
-				description: "Token from LOGIN API in Bearer TOKEN format"
-			}
-		},
-		components: {
-			securitySchemes: {
-				bearerAuth: {
-					type: 'http',
-					scheme: 'bearer',
-					bearerFormat: 'JWT',
-				}
-			}
-		},
-		servers: [
-			{
-				url: "http://localhost:4000/api/v0",
-			},
-		],
-	},
-	apis: ["./src/routes/*.js"],
-};
-
-const specs = swaggerJsDoc(options)
+const specs = swaggerJsDoc(swaggerOptions)
 const app = express()
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 app.use(cors())
