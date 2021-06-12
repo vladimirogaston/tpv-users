@@ -4,7 +4,6 @@ const morgan = require("morgan")
 const swaggerOptions = require('./swagger.options')
 const swaggerUI = require("swagger-ui-express")
 const swaggerJsDoc = require("swagger-jsdoc")
-
 const apiRouter = require('./src/routes/api.route')
 const dotenv = require('dotenv')
 

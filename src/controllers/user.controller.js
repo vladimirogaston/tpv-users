@@ -1,9 +1,8 @@
-const { UserDAO } = require('../models/db')
+const { UserDAO } = require('../models/user.model')
 const dotenv = require('dotenv')
 const HttpException = require('../middleware/HttpException')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const awaitHandlerFactory = require('../middleware/await.handler.factory')
 
 const getAllUsers = async (req, res, next) => {
     let userList = await UserDAO.findAll()
@@ -17,7 +16,9 @@ const getUserById = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
-    await hashPassword(req)
+    if (req.body.password) {
+        req.body.password = await bcrypt.hash(req.body.password, 8)
+    }
     const result = await UserDAO.create(req.body)
     if (!result) throw new HttpException(500, 'Something went wrong')
     res.status(201).send('User was created!')
@@ -51,12 +52,6 @@ const userLogin = async (req, res, next) => {
         } else {
             throw new HttpException(403, 'Forbidden operation exception')
         }
-    }
-}
-
-const hashPassword = async (req) => {
-    if (req.body.password) {
-        req.body.password = await bcrypt.hash(req.body.password, 8)
     }
 }
 

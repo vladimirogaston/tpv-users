@@ -8,7 +8,6 @@ const { createUserSchema } = require('./validations/userValidator.middleware')
 const { getAllUsers, getUserById, createUser, deactivateUser, updateUser } = require('../controllers/user.controller')
 
 const authenticate = require('../middleware/authenticate.middleware')
-const authorize = require('../middleware/authorize.middleware')
 const role = require('../models/user.roles')
 
 /**
@@ -58,7 +57,7 @@ const role = require('../models/user.roles')
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', authenticate, awaitHandlerFactory(getAllUsers))
+router.get('/', authenticate(role.ADMIN), awaitHandlerFactory(getAllUsers))
 
 /**
  * @swagger
@@ -85,7 +84,7 @@ router.get('/', authenticate, awaitHandlerFactory(getAllUsers))
  *               schema:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/:id', awaitHandlerFactory(getUserById))
+router.get('/:id', authenticate(role.ADMIN), awaitHandlerFactory(getUserById))
 
 /**
  * @swagger
@@ -113,7 +112,7 @@ router.get('/:id', awaitHandlerFactory(getUserById))
  *       403:
  *         description: Access token is missing or invalid
  */
-router.post('/', createUserSchema, validate, awaitHandlerFactory(createUser))
+router.post('/', authenticate(role.ADMIN), createUserSchema, validate, awaitHandlerFactory(createUser))
 
 /**
  * @swagger
@@ -141,7 +140,7 @@ router.post('/', createUserSchema, validate, awaitHandlerFactory(createUser))
  *       409:
  *         description: Conflict exception some values are in use by another user
  */
-router.put('/:id', createUserSchema, validate, authenticate, authorize(role.ADMIN), awaitHandlerFactory(updateUser))
+router.put('/:id', authenticate(role.ADMIN), createUserSchema, validate, awaitHandlerFactory(updateUser))
 
 /**
  * @swagger
@@ -157,6 +156,6 @@ router.put('/:id', createUserSchema, validate, authenticate, authorize(role.ADMI
  *       500:
  *         description: Some server error
  */
-router.delete('/id', validate, authorize(role.ADMIN), awaitHandlerFactory(deactivateUser))
+router.delete('/id', authenticate(role.ADMIN), validate, awaitHandlerFactory(deactivateUser))
 
 module.exports = router
