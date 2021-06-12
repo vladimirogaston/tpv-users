@@ -1,4 +1,6 @@
-module.exports = (sequelize, type)=>{
+const { connection, Sequelize } = require('./db.js')
+
+const User = (sequelize, type) => {
     return sequelize.define('users',{
         id: {
             type: type.INTEGER,
@@ -21,3 +23,6 @@ module.exports = (sequelize, type)=>{
         }
     })
 }
+
+const UserDAO = User(connection, Sequelize)
+module.exports = { UserDAO }

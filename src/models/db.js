@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
-const user = require('./user.model');
 
 /**
  * make this function works
- * 
+ *
  * @error
  * @returns null
  */
@@ -31,11 +30,8 @@ var connection = siwtchDb()
 console.log(`INIT PERSISTENCE ON NODE_ENV: ${process.env.NODE_ENV}`)
 
 /*LOS OBJETOS QUE VOY A USAR EN LOS CONTROLADORES PARA ACCEDER A LOS DATOS*/
-const UserDAO = user(connection, Sequelize)
 connection.sync({ force: false }).then(() => {
     console.log('Tablas sincronizadas')
 })
 
-module.exports = {
-    UserDAO
-}
+module.exports = { connection, Sequelize }
