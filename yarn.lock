@@ -2134,7 +2134,7 @@
   "resolved" "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
   "version" "4.0.0"
 
-"js-yaml@^3.13.1", "js-yaml@^3.3.1":
+"js-yaml@^3.13.1", "js-yaml@^3.14.1", "js-yaml@^3.3.1":
   "integrity" "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g=="
   "resolved" "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz"
   "version" "3.14.1"
@@ -4329,7 +4329,7 @@
   "resolved" "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz"
   "version" "4.0.0"
 
-"yaml@2.0.0-1":
+"yaml@^2.0.0-1", "yaml@2.0.0-1":
   "integrity" "sha512-W7h5dEhywMKenDJh2iX/LABkbFnBxasD27oyXWDS/feDsxiw0dD5ncXdYXgkvAsXIY2MpW/ZKkr9IU30DBdMNQ=="
   "resolved" "https://registry.npmjs.org/yaml/-/yaml-2.0.0-1.tgz"
   "version" "2.0.0-1"

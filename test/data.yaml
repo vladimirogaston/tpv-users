@@ -1,0 +1,11 @@
+--- # Users data
+Users:
+  - username: "usr001"
+    password: "001"
+    role: "Admin"
+  - username: "usr002"
+    password: "002"
+    role: "Customer"
+  - username: "usr003"
+    password: "003"
+    role: "Operator"

@@ -60,6 +60,8 @@ const router = express.Router()
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Token'
+ *       403:
+ *         description: The input values does not match with an existent user
  *       500:
  *         description: Some server error
  */
