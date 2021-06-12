@@ -4,7 +4,6 @@ const router = express.Router()
 const awaitHandlerFactory = require('../middleware/await.handler.factory')
 const validate = require('../middleware/validate.middleware')
 const authenticate = require('../middleware/authenticate.middleware')
-const authorize = require('../middleware/authorize.middleware')
 
 const { createCustomerSchema } = require('./validations/customer.schema.validation')
 const role = require('../models/user.roles')
@@ -60,7 +59,7 @@ const { getUserById, createUser, updateUser, deactivateUser } = require('../cont
  *               schema:
  *                 $ref: '#/components/schemas/Customer'
  */
-router.get('/:id', authenticate, authorize(role.CUSTOMER), awaitHandlerFactory(getUserById))
+router.get('/:id', authenticate(role.CUSTOMER), awaitHandlerFactory(getUserById))
 
 /**
  * @swagger
@@ -86,7 +85,7 @@ router.get('/:id', authenticate, authorize(role.CUSTOMER), awaitHandlerFactory(g
  *       409:
  *         description: Conflict exception some values are in use by another customer
  */
-router.post('/', createCustomerSchema, validate, authenticate, authorize(role.CUSTOMER), awaitHandlerFactory(createUser))
+router.post('/', authenticate(role.CUSTOMER), createCustomerSchema, validate, awaitHandlerFactory(createUser))
 
 /**
  * @swagger
@@ -114,7 +113,7 @@ router.post('/', createCustomerSchema, validate, authenticate, authorize(role.CU
  *       409:
  *         description: Conflict exception some values are in use by another customer
  */
-router.put('/:id', createCustomerSchema, validate, authenticate, authorize(role.CUSTOMER), awaitHandlerFactory(updateUser))
+router.put('/:id', authenticate(role.CUSTOMER), createCustomerSchema, validate, awaitHandlerFactory(updateUser))
 
 /**
  * @swagger
@@ -130,6 +129,6 @@ router.put('/:id', createCustomerSchema, validate, authenticate, authorize(role.
  *       500:
  *         description: Some server error
  */
-router.delete('/id', validate, authorize(role.CUSTOMER), awaitHandlerFactory(deactivateUser))
+router.delete('/id', authenticate(role.CUSTOMER), validate, awaitHandlerFactory(deactivateUser))
 
 module.exports = router
