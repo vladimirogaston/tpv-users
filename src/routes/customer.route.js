@@ -85,7 +85,15 @@ router.get('/:id', authenticate(role.CUSTOMER), awaitHandlerFactory(getUserById)
  *       409:
  *         description: Conflict exception some values are in use by another customer
  */
-router.post('/', authenticate(role.CUSTOMER), createCustomerSchema, validate, awaitHandlerFactory(createUser))
+router.post('/', 
+    createCustomerSchema, 
+    validate, 
+    (req, res, next) => {
+        req.body.role = role.CUSTOMER
+        next()
+    },
+    awaitHandlerFactory(createUser)
+)
 
 /**
  * @swagger
