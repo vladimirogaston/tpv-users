@@ -93,7 +93,7 @@ router.post('/', createCustomerSchema, validate, authenticate, authorize(role.CU
  * /customers/{id}:
  *   put:
  *     security:
- *       - jwt: []
+ *       - bearerAuth: []
  *     summary: Updates a customer
  *     tags: [Customers]
  *     requestBody:
@@ -121,7 +121,7 @@ router.put('/:id', createCustomerSchema, validate, authenticate, authorize(role.
  * /customers/{id}:
  *   delete:
  *     security:
- *       - jwt: []
+ *       - bearerAuth: []
  *     summary: Deactivate a customer
  *     tags: [Customers]
  *     responses:
