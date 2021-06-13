@@ -1,8 +1,8 @@
 const express = require('express')
 const { userLogin } = require('../controllers/user.controller')
-const awaitHandlerFactory = require('../middleware/await.handler.factory')
+const awaitHandlerFactory = require('./middleware/await.handler.factory')
 const { validateLoginSchema } = require('./validations/login.schema')
-const validate = require('../middleware/validate.middleware')
+const validate = require('./middleware/validate.middleware')
 const router = express.Router()
 
 /**

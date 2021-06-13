@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
-const awaitHandlerFactory = require('../middleware/await.handler.factory')
-const validate = require('../middleware/validate.middleware')
+const awaitHandlerFactory = require('./middleware/await.handler.factory')
+const validate = require('./middleware/validate.middleware')
 
 const { createUserSchema } = require('./validations/userValidator.middleware')
 const { getAllUsers, getUserById, createUser, deactivateUser, updateUser } = require('../controllers/user.controller')
 
-const authenticate = require('../middleware/authenticate.middleware')
-const role = require('../models/user.roles')
+const authenticate = require('./middleware/authenticate.middleware')
+const role = require('../models/roles.model')
 
 /**
  * @swagger

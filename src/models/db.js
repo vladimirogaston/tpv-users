@@ -1,12 +1,6 @@
 const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 
-/**
- * make this function works
- *
- * @error
- * @returns null
- */
  const siwtchDb = ()=>{
     if (process.env.NODE_ENV == 'development') {
         connection = new Sequelize(

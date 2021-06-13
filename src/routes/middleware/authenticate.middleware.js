@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
-const HttpException = require('./HttpException')
-const userRoles = require('../models/user.roles')
+const HttpException = require('../../controllers/HttpException')
 
 module.exports = (rol) => {
     return async function (req, res, next) {
