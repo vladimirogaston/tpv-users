@@ -1,6 +1,6 @@
 const { UserDAO } = require('../models/user.model')
 const dotenv = require('dotenv')
-const HttpException = require('../middleware/HttpException')
+const HttpException = require('./HttpException')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
