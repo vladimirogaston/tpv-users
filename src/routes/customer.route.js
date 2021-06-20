@@ -2,10 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 const awaitHandlerFactory = require('./middleware/await.handler.factory')
-const validate = require('./middleware/validate.middleware')
-const authenticate = require('./middleware/authenticate.middleware')
+const validation = require('./middleware/validation.middleware')
+const auth = require('./middleware/auth.middleware')
+const authorize = require('./middleware/authorize.middleware')
 
-const { createCustomerSchema } = require('./validations/customer.schema.validation')
+const { createCustomerSchema } = require('./validations/customer.schema')
 const role = require('../models/roles.model')
 const { getUserById, createUser, updateUser, deactivateUser } = require('../controllers/user.controller')
 
@@ -59,7 +60,7 @@ const { getUserById, createUser, updateUser, deactivateUser } = require('../cont
  *               schema:
  *                 $ref: '#/components/schemas/Customer'
  */
-router.get('/:id', authenticate(role.CUSTOMER), awaitHandlerFactory(getUserById))
+router.get('/:id', auth(role.CUSTOMER), authorize, awaitHandlerFactory(getUserById))
 
 /**
  * @swagger
@@ -87,7 +88,7 @@ router.get('/:id', authenticate(role.CUSTOMER), awaitHandlerFactory(getUserById)
  */
 router.post('/', 
     createCustomerSchema, 
-    validate, 
+    validation, 
     (req, res, next) => {
         req.body.role = role.CUSTOMER
         next()
@@ -121,7 +122,7 @@ router.post('/',
  *       409:
  *         description: Conflict exception some values are in use by another customer
  */
-router.put('/:id', authenticate(role.CUSTOMER), createCustomerSchema, validate, awaitHandlerFactory(updateUser))
+router.put('/:id', auth(role.CUSTOMER), createCustomerSchema, validation, awaitHandlerFactory(updateUser))
 
 /**
  * @swagger
@@ -137,6 +138,6 @@ router.put('/:id', authenticate(role.CUSTOMER), createCustomerSchema, validate, 
  *       500:
  *         description: Some server error
  */
-router.delete('/id', authenticate(role.CUSTOMER), validate, awaitHandlerFactory(deactivateUser))
+router.delete('/id', auth(role.CUSTOMER), validation, awaitHandlerFactory(deactivateUser))
 
 module.exports = router

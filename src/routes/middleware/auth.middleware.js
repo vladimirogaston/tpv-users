@@ -26,6 +26,7 @@ module.exports = (rol) => {
                 res.status(500).send('ERROR VERIFY ROLE')
             }
         }
+        req.body.id = decoded.id
         next()
     }
 }

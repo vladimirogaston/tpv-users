@@ -2,7 +2,7 @@ const express = require('express')
 const { userLogin } = require('../controllers/user.controller')
 const awaitHandlerFactory = require('./middleware/await.handler.factory')
 const { validateLoginSchema } = require('./validations/login.schema')
-const validate = require('./middleware/validate.middleware')
+const validation = require('./middleware/validation.middleware')
 const router = express.Router()
 
 /**
@@ -65,6 +65,6 @@ const router = express.Router()
  *       500:
  *         description: Some server error
  */
-router.post('/', validateLoginSchema, validate, awaitHandlerFactory(userLogin))
+router.post('/', validateLoginSchema, validation, awaitHandlerFactory(userLogin))
 
 module.exports = router
