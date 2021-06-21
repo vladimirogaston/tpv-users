@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const HttpException = require('./HttpException')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const rolesModel = require('../models/roles.model')
 
 const getAllUsers = async (req, res, next) => {
     let userList = await UserDAO.findAll()
@@ -16,6 +17,9 @@ const getUserById = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
+    if((req.body.role == rolesModel.ADMIN || req.body.role == rolesModel.OPERATOR) && req.body.token_role != rolesModel.ADMIN) {
+        throw new HttpException(403, 'Forbidden operation exception')
+    }
     if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 8)
     }
