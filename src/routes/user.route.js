@@ -6,7 +6,7 @@ const validation = require('./middleware/validation.middleware')
 const { createUserSchema } = require('./validations/user.scheme')
 const { getAllUsers, getUserById, createUser, deactivateUser, updateUser } = require('../controllers/user.controller')
 
-const auth = require('./middleware/auth.middleware')
+const auth = require('./middleware/authentication.middleware')
 const roleBasedAuthorization = require('./middleware/roleBasedAuthorization.middleware')
 const idBasedAuthorization = require('./middleware/idBasedAuthorization.middleware')
 const role = require('../models/roles.model')
