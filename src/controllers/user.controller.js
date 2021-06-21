@@ -43,7 +43,7 @@ const deactivateUser = async (req, res, next) => {
 }
 
 const userLogin = async (req, res, next) => {
-    const storedUser = await UserDAO.findOne({ where: { username: req.body.username }})
+    const storedUser = await UserDAO.findOne({ where: { mobile: req.body.mobile }})
     if(!storedUser) {
         throw new HttpException(401, 'User not found exception')
     } else {

@@ -1,3 +1,4 @@
+const { Type } = require('js-yaml')
 const { connection, Sequelize } = require('./db.js')
 
 const User = (sequelize, type) => {
@@ -7,7 +8,22 @@ const User = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        username: {
+        mobile: {
+            type: type.STRING,
+            allowNull: false,
+            unique: true
+        },
+        email: {
+            type: type.STRING,
+            allowNull: false,
+            unique: true
+        },
+        firstname: {
+            type: type.STRING,
+            unique: true,
+            allowNull: false
+        },
+        surname: {
             type: type.STRING,
             unique: true,
             allowNull: false
@@ -16,9 +32,24 @@ const User = (sequelize, type) => {
             type: type.STRING,
             unique: true,
             allowNull: false
+        }, 
+        dni: {
+            type: type.INTEGER,
+            unique: true,
+            allowNull: false
+        },
+        address: {
+            type: type.STRING,
+            unique: false,
+            default: ""
         },
         role: {
             type: type.STRING,
+            allowNull: false
+        },
+        active: {
+            type: type.BOOLEAN,
+            default: true,
             allowNull: false
         }
     })

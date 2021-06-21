@@ -19,16 +19,37 @@ const rolesModel = require('../models/roles.model')
  *     User:
  *       type: object
  *       required:
- *         - username
+ *         - mobile
+ *         - email
+ *         - firstname
+ *         - surname
  *         - password
+ *         - dni
+ *         - address
  *         - role
+ *         - active
  *       properties:
- *         username:
+ *         mobile:
  *           type: string
- *           description: The user's username
+ *           description: The user's phone
+ *         email:
+ *           type: string
+ *           description: The user's email
+ *         firstname:
+ *           type: string
+ *           description: The user's firstname
+ *         surname:
+ *           type: string
+ *           description: The user's surname
  *         password:
  *           type: string
  *           description: The user's password
+ *         dni:
+ *           type: int
+ *           description: The user's dni
+ *         address: 
+ *           type: string
+ *           description: The user's legal address
  *         role:
  *           type: string
  *           description: The user's role
