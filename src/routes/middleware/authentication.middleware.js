@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const HttpException = require('../../controllers/HttpException')
 
-module.exports = (rol) => {
+module.exports = () => {
     return async function (req, res, next) {
         const authHeader = req.headers['authorization']
         if (!authHeader || !authHeader.startsWith('Bearer')) {
@@ -20,13 +20,8 @@ module.exports = (rol) => {
             res.status(500).send('ERROR VERIFY')
         }
         
-        const userROLE = decoded.role
-        if (rol) {
-            if (rol !== userROLE) {
-                res.status(500).send('ERROR VERIFY ROLE')
-            }
-        }
-        req.body.id = decoded.id
+        req.body.token_id = decoded.id
+        req.body.token_role = decoded.role
         next()
     }
 }

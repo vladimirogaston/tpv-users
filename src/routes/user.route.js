@@ -3,12 +3,14 @@ const router = express.Router()
 
 const awaitHandlerFactory = require('./middleware/await.handler.factory')
 const validation = require('./middleware/validation.middleware')
-
 const { createUserSchema } = require('./validations/user.scheme')
 const { getAllUsers, getUserById, createUser, deactivateUser, updateUser } = require('../controllers/user.controller')
 
 const auth = require('./middleware/auth.middleware')
+const roleBasedAuthorization = require('./middleware/roleBasedAuthorization.middleware')
+const idBasedAuthorization = require('./middleware/idBasedAuthorization.middleware')
 const role = require('../models/roles.model')
+const rolesModel = require('../models/roles.model')
 
 /**
  * @swagger
@@ -57,7 +59,7 @@ const role = require('../models/roles.model')
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', auth(role.ADMIN), awaitHandlerFactory(getAllUsers))
+router.get('/', auth(), awaitHandlerFactory(roleBasedAuthorization(role.ADMIN)), awaitHandlerFactory(getAllUsers))
 
 /**
  * @swagger
@@ -84,7 +86,34 @@ router.get('/', auth(role.ADMIN), awaitHandlerFactory(getAllUsers))
  *               schema:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/:id', auth(role.ADMIN), awaitHandlerFactory(getUserById))
+router.get('/:id', auth(), awaitHandlerFactory(roleBasedAuthorization([rolesModel.ADMIN, rolesModel.OPERATOR])),awaitHandlerFactory(getUserById))
+
+/**
+ * @swagger
+ * /users/customers/{id}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Returns one user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user's id
+ *     responses:
+ *       200:
+ *         description: Retrieve one user by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               schema:
+ *                 $ref: '#/components/schemas/User'
+ */
+ router.get('/customers/:id', auth(), awaitHandlerFactory(roleBasedAuthorization([rolesModel.CUSTOMER])), awaitHandlerFactory(idBasedAuthorization()),awaitHandlerFactory(getUserById))
 
 /**
  * @swagger
@@ -112,7 +141,7 @@ router.get('/:id', auth(role.ADMIN), awaitHandlerFactory(getUserById))
  *       403:
  *         description: Access token is missing or invalid
  */
-router.post('/', auth(role.ADMIN), createUserSchema, validation, awaitHandlerFactory(createUser))
+router.post('/', createUserSchema, validation, awaitHandlerFactory(createUser))
 
 /**
  * @swagger
@@ -140,7 +169,7 @@ router.post('/', auth(role.ADMIN), createUserSchema, validation, awaitHandlerFac
  *       409:
  *         description: Conflict exception some values are in use by another user
  */
-router.put('/:id', auth(role.ADMIN), createUserSchema, validation, awaitHandlerFactory(updateUser))
+router.put('/:id', auth(), awaitHandlerFactory(idBasedAuthorization()), createUserSchema, validation, awaitHandlerFactory(updateUser))
 
 /**
  * @swagger
@@ -156,6 +185,6 @@ router.put('/:id', auth(role.ADMIN), createUserSchema, validation, awaitHandlerF
  *       500:
  *         description: Some server error
  */
-router.delete('/id', auth(role.ADMIN), validation, awaitHandlerFactory(deactivateUser))
+router.delete('/id', auth(), awaitHandlerFactory(roleBasedAuthorization([role.ADMIN])), awaitHandlerFactory(deactivateUser))
 
 module.exports = router
