@@ -45,7 +45,7 @@ const rolesModel = require('../models/roles.model')
  *           type: string
  *           description: The user's password
  *         dni:
- *           type: int
+ *           type: integer
  *           description: The user's dni
  *         address: 
  *           type: string
@@ -53,6 +53,9 @@ const rolesModel = require('../models/roles.model')
  *         role:
  *           type: string
  *           description: The user's role
+ *         active:
+ *           type: boolean
+ *           description: The user's status
  */
 
 /**

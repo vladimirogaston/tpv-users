@@ -1,10 +1,11 @@
 const { body } = require('express-validator')
 
 exports.validateLoginSchema = [
-    body('username')
+    body('mobile')
         .exists().bail()
-        .notEmpty().bail(),
+        .notEmpty().bail()
+        .isInt().bail(),
     body('password')
         .exists().bail()
-     .notEmpty().bail(),
+        .notEmpty().bail(),
 ]

@@ -17,12 +17,13 @@ const getUserById = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
-    if((req.body.role == rolesModel.ADMIN || req.body.role == rolesModel.OPERATOR) && req.body.token_role != rolesModel.ADMIN) {
-        throw new HttpException(403, 'Forbidden operation exception')
-    }
+    //if((req.body.role == rolesModel.ADMIN || req.body.role == rolesModel.OPERATOR) && req.body.token_role != rolesModel.ADMIN) {
+    //    throw new HttpException(403, 'Forbidden operation exception')
+    //}
     if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 8)
     }
+    req.body.active = true
     const result = await UserDAO.create(req.body)
     if (!result) throw new HttpException(500, 'Something went wrong')
     res.status(201).send('User was created!')
