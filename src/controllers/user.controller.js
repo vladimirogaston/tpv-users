@@ -1,8 +1,6 @@
 const { UserDAO } = require('../models/user.model')
-const dotenv = require('dotenv')
 const HttpException = require('./HttpException')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const rolesModel = require('../models/roles.model')
 
 const getAllUsers = async (req, res, next) => {
@@ -17,9 +15,6 @@ const getUserById = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
-    //if((req.body.role == rolesModel.ADMIN || req.body.role == rolesModel.OPERATOR) && req.body.token_role != rolesModel.ADMIN) {
-    //    throw new HttpException(403, 'Forbidden operation exception')
-    //}
     if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 8)
     }
@@ -43,28 +38,10 @@ const deactivateUser = async (req, res, next) => {
     await UserDAO.save(target)
 }
 
-const userLogin = async (req, res, next) => {
-    const storedUser = await UserDAO.findOne({ where: { mobile: req.body.mobile }})
-    if(!storedUser) {
-        throw new HttpException(401, 'User not found exception')
-    } else {
-        const isMatch = await bcrypt.compare(req.body.password, storedUser.password)
-        if(isMatch) {
-            dotenv.config()
-            const secretKey = process.env.SECRET_JWT
-            const token = jwt.sign({ id: storedUser.id.toString(), role: storedUser.role }, secretKey, { expiresIn: '24h'})
-            res.json({ 'id': storedUser.id, token: token })
-        } else {
-            throw new HttpException(403, 'Forbidden operation exception')
-        }
-    }
-}
-
 module.exports = {
     getAllUsers,
     getUserById,
     createUser,
     updateUser,
-    deactivateUser,
-    userLogin
+    deactivateUser
 }

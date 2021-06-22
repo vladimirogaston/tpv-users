@@ -1,6 +1,6 @@
 const { body } = require('express-validator')
 
-exports.validateLoginSchema = [
+exports.loginSchema = [
     body('mobile')
         .exists().bail()
         .notEmpty().bail()

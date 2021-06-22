@@ -1,4 +1,3 @@
-const { Type } = require('js-yaml')
 const { connection, Sequelize } = require('./db.js')
 
 const User = (sequelize, type) => {

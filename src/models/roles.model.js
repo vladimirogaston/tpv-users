@@ -1,5 +1,6 @@
 module.exports = {
     ADMIN: 'Admin',
     OPERATOR: 'Operator',
-    CUSTOMER: 'Customer'
+    CUSTOMER: 'Customer',
+    AUTHENTICATED: 'Authenticated'
 }

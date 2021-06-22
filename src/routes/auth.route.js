@@ -1,8 +1,8 @@
 const express = require('express')
-const { userLogin } = require('../controllers/user.controller')
+const authenticate = require('../controllers/authentication.controller')
 const awaitHandlerFactory = require('./middleware/await.handler.factory')
-const { validateLoginSchema } = require('./validations/login.schema')
-const validation = require('./middleware/validation.middleware')
+const { loginSchema } = require('./validations/login.schema')
+const validate = require('./middleware/validation.middleware')
 const router = express.Router()
 
 /**
@@ -19,17 +19,17 @@ const router = express.Router()
  *           description: The api-key token
  *         example:
  *           authorization: Bearer ...thekoken
- *     
+ *
  *     Auth:
  *       type: object
  *       required:
  *         - username
  *         - password
  *       properties:
- *         username: 
+ *         username:
  *           type: string
  *           description: The user's username
- *         password: 
+ *         password:
  *           type: string
  *           description: Thec user's password
  */
@@ -65,6 +65,6 @@ const router = express.Router()
  *       500:
  *         description: Some server error
  */
-router.post('/', validateLoginSchema, validation, awaitHandlerFactory(userLogin))
+router.post('/', loginSchema, validate, awaitHandlerFactory(authenticate))
 
 module.exports = router
